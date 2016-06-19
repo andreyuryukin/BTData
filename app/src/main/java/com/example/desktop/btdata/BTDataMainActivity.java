@@ -21,6 +21,7 @@ public class BTDataMainActivity extends AppCompatActivity {
     public BluetoothDevice device;
 
     private static final int REQUEST_ENABLE_BT = 0;
+    public boolean receiverRegistered;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,13 +80,17 @@ public class BTDataMainActivity extends AppCompatActivity {
             this.registerReceiver(mReceiver, filter1);
             this.registerReceiver(mReceiver, filter2);
             this.registerReceiver(mReceiver, filter3);
+            receiverRegistered = true;
         }
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        this.unregisterReceiver(mReceiver);
-        Log.v("onPause", "Unregistering");
+    protected void onDestroy() {
+        super.onDestroy();
+        if(receiverRegistered){
+            this.unregisterReceiver(mReceiver);
+            receiverRegistered = false;
+            Log.v("onDestroy", "Unregistering");
+        }
     }
 }
